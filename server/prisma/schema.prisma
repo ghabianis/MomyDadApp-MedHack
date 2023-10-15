@@ -1,0 +1,105 @@
+datasource postgres {
+  provider = "postgresql"
+  url      = env("POSTGRESQL_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator prismaCRUDGenerator {
+  provider = "npx prisma-generator-crud"
+  output   = "./generated"
+}
+
+model AppConfig {
+  id        String    @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  deletedAt DateTime?
+  value     String?
+  key       String?   @unique
+}
+
+model User {
+  id           String         @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime?      @updatedAt
+  deletedAt    DateTime?
+  firstName    String?
+  lastName     String?
+  username     String         @unique
+  isValid      Boolean?
+  roles        String[]
+  weight       String?
+  height       String?
+  partner      String?
+  birthday     String?
+  diseases     String[]
+  image        String?
+  pragnancy    DateTime?
+  posts        todo[]
+  appointments appointments[]
+  Questions    Questions[]
+  exercices    exercices[]
+  nutrition    nutrition[]
+}
+
+model todo {
+  id        String    @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  deletedAt DateTime?
+  title     String?
+  User      User?     @relation(fields: [userId], references: [id])
+  userId    String?
+}
+
+model appointments {
+  id        String    @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  deletedAt DateTime?
+  title     String?
+  startDate DateTime?
+  endDate   DateTime?
+  User      User?     @relation(fields: [userId], references: [id])
+  userId    String?
+}
+
+model Questions {
+  id        String    @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  deletedAt DateTime?
+  subject   String?
+  startDate DateTime?
+  endDate   DateTime?
+  User      User?     @relation(fields: [userId], references: [id])
+  userId    String?
+}
+
+model nutrition {
+  id          String    @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime? @updatedAt
+  deletedAt   DateTime?
+  name        String?
+  description String?
+  type        String?
+  User        User?     @relation(fields: [userId], references: [id])
+  userId      String?
+}
+
+model exercices {
+  id          String    @id @default(dbgenerated("gen_random_uuid()"))
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime? @updatedAt
+  deletedAt   DateTime?
+  name        String?
+  title       String?
+  description String?
+  image       String?
+  User        User?     @relation(fields: [userId], references: [id])
+  userId      String?
+}
